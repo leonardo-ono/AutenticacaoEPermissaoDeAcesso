@@ -17,7 +17,7 @@ public class CalculadoraImpl implements CalculadoraInterface {
     @Override
     @NecessitaDePermissao("subtrair")
     public int subtrair(int a, int b) {
-        return a+b;
+        return a-b;
     }
     
 }

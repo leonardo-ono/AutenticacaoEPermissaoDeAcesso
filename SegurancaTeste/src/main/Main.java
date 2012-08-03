@@ -4,11 +4,10 @@ import calculadora.CalculadoraImpl;
 import calculadora.CalculadoraInterface;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import seguranca.SecureBeanFactory;
 import seguranca.Sessao;
 import seguranca.Verificacao;
-import seguranca.impl.SessaoImpl;
+import seguranca.impl.VerificacaoAdicionalSolicitadorSenhaDoProprioUsuarioParaSomar;
 
 /**
  *
@@ -33,7 +32,7 @@ public class Main {
         // Neste exemplo, somente para o metodo somar, 
         // pede a senha do proprio usuario antes
         List<Verificacao> verificacoesAdicionais = new ArrayList<Verificacao>();
-        verificacoesAdicionais.add(new SolicitadorSenhaDoProprioUsuarioParaSomar());
+        verificacoesAdicionais.add(new VerificacaoAdicionalSolicitadorSenhaDoProprioUsuarioParaSomar());
         
         // Cria uma calculadora proxy com interceptadores que verifica
         // a permissao de cada metodo anotado com @NecessitaDePermissao
@@ -67,29 +66,6 @@ public class Main {
             System.err.println("subtrair: " + ex.getCause());
             System.exit(-1);
         }
-    }
-    
-    // Verificacao adicional apenas para o metodo somar
-    private static class SolicitadorSenhaDoProprioUsuarioParaSomar implements Verificacao {
-
-        private SessaoImpl sessao = (SessaoImpl) Sessao.getInstance();
-        
-        @Override
-        public boolean isNecessario(String id) {
-            return id.equals("somar");
-        }
-
-        @Override
-        public boolean verificar(String id) {
-            String senha = JOptionPane.showInputDialog("Entre com a senha do usuario (senha=\"leo\"):", "");
-            return (senha.equals(sessao.getUsuario().getSenha()));
-        }
-
-        @Override
-        public String getMensagemDeAcessoNaoPermitido() {
-            return "Acesso negado para verificacao adicional !";
-        }
-        
     }
     
 }
