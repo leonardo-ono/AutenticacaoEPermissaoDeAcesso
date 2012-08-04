@@ -71,6 +71,17 @@ public class SecureBeanFactory {
                     verificarPermissao(np.value());
                 }
             }
+            
+            // Verifica as interfaces
+            for (Class i : proxy.getClass().getInterfaces()) {
+                methodConcreto = i.getMethod(method.getName(), method.getParameterTypes());
+                if (methodConcreto == null) continue;
+                // verifica se o metodo pode ser acessado de acordo com o ciclo de vida
+                if (methodConcreto.isAnnotationPresent(NecessitaDePermissao.class)) {
+                    NecessitaDePermissao np = methodConcreto.getAnnotation(NecessitaDePermissao.class);
+                    verificarPermissao(np.value());
+                }
+            }
 
             // retorno
             retorno = methodConcreto.invoke(concreteBean, args);
